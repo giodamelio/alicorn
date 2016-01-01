@@ -1,0 +1,23 @@
+{
+  "name": "alicorn",
+  "version": "0.1.0",
+  "description": "A simple game designed to be played by ai",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "game",
+    "ai"
+  ],
+  "author": "Gio d'Amelio",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giodamelio/alicorn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/giodamelio/alicorn/issues"
+  },
+  "homepage": "https://github.com/giodamelio/alicorn#readme"
+}
