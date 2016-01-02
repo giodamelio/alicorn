@@ -1,10 +1,11 @@
 import express from 'express';
 
+import api from './api';
+
 const app = express();
 
-app.get('/', function (req, res) {
-  res.send('Hello World');
-});
+// Mount the api
+app.use('/api', api);
 
 const PORT = 3141;
 app.listen(PORT);
