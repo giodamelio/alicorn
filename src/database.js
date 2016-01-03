@@ -7,7 +7,6 @@ const thinky = new Thinky({ db: 'alicorn' });
 const GameSchema = thinky.createModel('game', {
   id: type.string(),
   type: type.string(),
-  state: type.object(),
 });
 
 export { GameSchema };

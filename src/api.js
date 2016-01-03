@@ -16,10 +16,6 @@ api.get('/games/:name/start', function (req, res) {
       .send('No such game');
   }
 
-  res
-    .status(200)
-    .send(`Starting a game of ${gameName}`);
-
   // Generate uuid for game
   const id = uuid.v4();
 
@@ -34,8 +30,7 @@ api.get('/games/:name/start', function (req, res) {
   }).save()
     .then(function () {
       // Start the game
-      gameLogger.info('Starting game');
-      const gameRunner = new GAMES[gameName](gameLogger);
+      const gameRunner = new GAMES[gameName](gameLogger, res);
       gameRunner.start();
     })
     .error(function (err) {
