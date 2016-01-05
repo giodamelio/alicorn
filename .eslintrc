@@ -1,7 +1,0 @@
-{
-  "parser": "babel-eslint",
-  "extends": "airbnb/base",
-  "rules": {
-    "func-names": 0
-  }
-}
