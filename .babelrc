@@ -1,10 +1,9 @@
 {
   "presets": [
-    "es2015-node5"
+    "es2015-node"
   ],
   "plugins": [
     "transform-object-rest-spread",
     "transform-class-properties",
-    "syntax-trailing-function-commas"
   ]
 }
