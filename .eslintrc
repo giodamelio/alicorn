@@ -3,5 +3,8 @@
   "extends": "airbnb/base",
   "rules": {
     "func-names": 0
+  },
+  "env": {
+    "node": true
   }
 }
