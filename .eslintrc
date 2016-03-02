@@ -3,7 +3,8 @@
   "extends": "airbnb/base",
   "rules": {
     "func-names": 0,
-    "spaced-comment": [2, "always", { "markers": ["/"] }]
+    "spaced-comment": [2, "always", { "markers": ["/"] }],
+    "no-param-reassign": [2, { "props": false }]
   },
   "env": {
     "node": true
