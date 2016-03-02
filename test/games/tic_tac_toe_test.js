@@ -1,4 +1,4 @@
-import ticTacToe, { checkWinner } from '../../src/games/tic_tac_toe';
+import ticTacToe, { checkWinner, toString } from '../../src/games/tic_tac_toe';
 
 describe('Games', function () {
   describe('TicTacToe', function () {
@@ -190,6 +190,15 @@ describe('Games', function () {
           nextPlayer: 'X',
           winner: 'X',
         });
+    });
+
+    it('print the board', function () {
+      toString({
+        ...newGameState,
+        board: ['X', ' ', 'X',
+                ' ', 'X', ' ',
+                ' ', ' ', 'O'],
+      }).should.equal('X| |X\n-+-+-\n |X| \n-+-+-\n | |O\n');
     });
   });
 });
