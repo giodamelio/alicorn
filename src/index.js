@@ -1,7 +1,9 @@
 import Koa from 'koa';
+import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 
 const app = new Koa();
+const router = new Router();
 
 // Handle errors
 app.use(async (ctx, next) => {
@@ -15,13 +17,14 @@ app.use(async (ctx, next) => {
   }
 });
 
+router.get('/', async ctx => {
+  ctx.body = 'Hello World';
+});
+
 // Apply middleware
 app.use(bodyParser()); // Parse request bodies
-
-app.use(async ctx => {
-  console.log(ctx.request.body);
-  ctx.body = 'Hello World!';
-});
+app.use(router.routes()); // Handle routes
+app.use(router.allowedMethods()); // Handle unknown routes
 
 console.log('App started at http://localhost:3141/');
 app.listen(3141);
