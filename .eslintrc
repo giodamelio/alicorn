@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "extends": "airbnb/base",
   "rules": {
-    "func-names": 0
+    "func-names": 0,
+    "spaced-comment": [2, "always", { "markers": ["/"] }]
   },
   "env": {
     "node": true
