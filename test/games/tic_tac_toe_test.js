@@ -173,5 +173,23 @@ describe('Games', function () {
         }));
       });
     });
+
+    it('Play complete game', function () {
+      ticTacToe()
+        .then(state => ticTacToe(state, 0, 'X'))
+        .then(state => ticTacToe(state, 8, 'O'))
+        .then(state => ticTacToe(state, 2, 'X'))
+        .then(state => ticTacToe(state, 1, 'O'))
+        .then(state => ticTacToe(state, 4, 'X'))
+        .then(state => ticTacToe(state, 7, 'O'))
+        .then(state => ticTacToe(state, 6, 'X'))
+        .should.finally.deepEqual({
+          ...newGameState,
+          status: 'done',
+          board: ['X', 'O', 'X', ' ', 'X', ' ', 'X', 'O', 'O'],
+          nextPlayer: 'X',
+          winner: 'X',
+        });
+    });
   });
 });
