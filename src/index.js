@@ -1,4 +1,5 @@
 import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
 
 const app = new Koa();
 
@@ -14,7 +15,11 @@ app.use(async (ctx, next) => {
   }
 });
 
+// Apply middleware
+app.use(bodyParser()); // Parse request bodies
+
 app.use(async ctx => {
+  console.log(ctx.request.body);
   ctx.body = 'Hello World!';
 });
 
