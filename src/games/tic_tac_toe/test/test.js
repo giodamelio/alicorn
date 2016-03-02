@@ -1,4 +1,8 @@
-import ticTacToe, { checkWinner, toString } from '../../src/games/tic_tac_toe';
+import {
+  logic as ticTacToe,
+  checkWinner,
+  toString,
+} from '..';
 
 describe('Games', function () {
   describe('TicTacToe', function () {

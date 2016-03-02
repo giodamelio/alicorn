@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "babel-node src/index.js",
-    "test": "mocha -R spec -r should --compilers js:babel-register test/*",
+    "test": "mocha -R spec -r should --compilers js:babel-register test/* src/games/*/test/*.js",
     "lint": "eslint src/ test/"
   },
   "keywords": [

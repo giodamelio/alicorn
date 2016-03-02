@@ -35,7 +35,7 @@ export function checkWinner(board, player) {
   return false;
 }
 
-export default function ticTacToe(inputState, move, player) {
+export function logic(inputState, move, player) {
   return new Promise((resolve, reject) => {
     let state = inputState;
     /// Validate inputs
@@ -114,16 +114,4 @@ export default function ticTacToe(inputState, move, player) {
     // Move done
     return resolve(state);
   });
-}
-
-// Print the board
-export function toString(state) {
-  return _(state.board)
-    .chunk(3)
-
-    // Add verticel lines
-    .map(row => `${row.join('|')}\n`)
-
-    // Add horizontal lines
-    .join('-+-+-\n');
 }
