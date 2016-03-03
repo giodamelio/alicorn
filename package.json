@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "babel-node src/index.js",
+    "dev": "node-dev -r babel-register src/index.js",
     "test": "mocha -R spec -r should --compilers js:babel-register test/* src/games/*/test/*.js",
     "lint": "eslint src/ test/"
   },
@@ -23,9 +24,7 @@
   },
   "homepage": "https://github.com/giodamelio/alicorn#readme",
   "dependencies": {
-    "koa": "^2.0.0-alpha.3",
-    "koa-bodyparser": "^3.0.0",
-    "koa-router": "^7.0.1",
+    "hapi": "^13.0.0",
     "lodash": "^4.5.0"
   },
   "devDependencies": {
