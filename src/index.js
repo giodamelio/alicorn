@@ -1,4 +1,6 @@
 import Hapi from 'hapi';
+import Good from 'good';
+import GoodConsole from 'good-console';
 
 const server = new Hapi.Server();
 
@@ -15,10 +17,32 @@ server.route({
   },
 });
 
-// Start the server
-server.start((err) => {
-  if (err) {
-    throw err;
+server.register([
+  {
+    register: Good,
+    options: {
+      reporters: [
+        {
+          reporter: GoodConsole,
+          events: {
+            request: '*',
+            response: '*',
+            log: '*',
+          },
+        },
+      ],
+    },
+  },
+], (pluginError) => {
+  if (pluginError) {
+    throw pluginError;
   }
-  console.log('Server running at:', server.info.uri);
+
+  // Start the server
+  server.start((serverError) => {
+    if (serverError) {
+      throw serverError;
+    }
+    server.log('info', `Server running at: ${server.info.uri}`);
+  });
 });
