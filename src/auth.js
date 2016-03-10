@@ -20,7 +20,7 @@ export default function (server) {
           callback(err, false);
         }
 
-        if (result) {
+        if (result === '1') {
           callback(null, true);
         } else {
           callback(null, false);

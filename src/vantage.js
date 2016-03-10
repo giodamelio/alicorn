@@ -37,6 +37,56 @@ export default function (server) {
       });
     });
 
+  // Remove a sesssion
+  vantageServer
+    .command('session_rm <userId>')
+    .description('Removes a session')
+    .action(function (args, callback) {
+      // Add user id to session store
+      redis.del(args.userId, (err) => {
+        if (err) {
+          this.log(err);
+          return callback();
+        }
+
+        this.log(`Session deleted (id: ${args.userId})`);
+        return callback();
+      });
+    });
+
+
+  // List current sessions
+  vantageServer
+    .command('session_list')
+    .description('Lists current sessions')
+    .action(function (args, callback) {
+      redis.keys('*', (err, result) => {
+        if (err) {
+          server.log('error', err);
+          return callback();
+        }
+
+        this.log(result);
+        return callback();
+      });
+    });
+
+  // Count current sessions
+  vantageServer
+    .command('session_count')
+    .description('Lists current session count')
+    .action(function (args, callback) {
+      redis.dbsize((err, result) => {
+        if (err) {
+          server.log('error', err);
+          return callback();
+        }
+
+        this.log(result);
+        return callback();
+      });
+    });
+
   vantageServer
     .delimiter('$')
     .listen(config.vantagePort, () => {
