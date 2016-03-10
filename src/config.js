@@ -7,8 +7,8 @@ const config = rc(name, {
   // node -e "console.log(require('crypto').randomBytes(32).toString('hex'));"
   jwtSecret: null,
 
-  // The path to the session store
-  sessionStorePath: 'session-db/',
+  // Vantage port
+  vantagePort: 31415,
 });
 
 if (!config.jwtSecret) {

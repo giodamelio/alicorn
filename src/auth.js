@@ -1,8 +1,8 @@
-import level from 'level';
+import Redis from 'ioredis';
 
 import config from './config';
 
-const sessionStore = level(config.sessionStorePath);
+const redis = new Redis();
 
 export default function (server) {
   // Setup the authentication
@@ -14,16 +14,17 @@ export default function (server) {
       }
 
       // Check to see if the session exists
-      sessionStore.get(decoded.id, (err) => {
+      redis.get(decoded.id, (err, result) => {
         if (err) {
-          if (err.type === 'NotFoundError') {
-            callback(null, false);
-          }
-
+          server.log('error', result);
           callback(err, false);
         }
 
-        callback(null, true);
+        if (result) {
+          callback(null, true);
+        } else {
+          callback(null, false);
+        }
       });
     },
     verifyOptions: {
