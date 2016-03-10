@@ -5,6 +5,7 @@ import JWTAuth from 'hapi-auth-jwt2';
 
 import auth from './auth';
 import userRoutes from './api/users';
+import vantageServer from './vantage';
 
 const server = new Hapi.Server();
 
@@ -52,5 +53,8 @@ server.register([
       throw serverError;
     }
     server.log('info', `Server running at: ${server.info.uri}`);
+
+    // Start the vantage server
+    vantageServer(server);
   });
 });

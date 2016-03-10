@@ -31,7 +31,8 @@
     "jsonwebtoken": "^5.7.0",
     "level": "^1.4.0",
     "lodash": "^4.5.0",
-    "rc": "^1.1.6"
+    "rc": "^1.1.6",
+    "vantage": "^1.5.2"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
