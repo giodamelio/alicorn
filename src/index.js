@@ -3,9 +3,8 @@ import Good from 'good';
 import GoodConsole from 'good-console';
 import JWTAuth from 'hapi-auth-jwt2';
 
-import config from './config';
-import routes from './routes';
 import auth from './auth';
+import userRoutes from './api/users';
 
 const server = new Hapi.Server();
 
@@ -44,8 +43,8 @@ server.register([
   // Setup the authentication
   auth(server);
 
-  // Register the routes
-  routes(server);
+  // Register the routes for the users api
+  userRoutes(server);
 
   // Start the server
   server.start((serverError) => {
