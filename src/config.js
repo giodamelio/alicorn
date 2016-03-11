@@ -3,6 +3,9 @@ import rc from 'rc';
 import { name } from '../package.json';
 
 const config = rc(name, {
+  // The servers port
+  port: 3141,
+
   // The secret for our sessions. Genereate with
   // node -e "console.log(require('crypto').randomBytes(32).toString('hex'));"
   jwtSecret: null,

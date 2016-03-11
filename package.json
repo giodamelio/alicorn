@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "babel-node src/index.js",
-    "dev": "node-dev -r babel-register src/index.js",
+    "dev": "node-dev -r babel-register src/index.js | bunyan -o short",
     "test": "mocha -R spec -r should --compilers js:babel-register test/* src/games/*/test/*.js",
     "lint": "eslint src/ test/"
   },
@@ -24,14 +24,14 @@
   },
   "homepage": "https://github.com/giodamelio/alicorn#readme",
   "dependencies": {
-    "good": "^6.6.0",
-    "good-console": "^5.3.1",
-    "hapi": "^13.0.0",
-    "hapi-auth-jwt2": "^5.4.1",
-    "ioredis": "^1.15.1",
+    "boom": "^3.1.2",
+    "bunyan": "^1.7.1",
     "jsonwebtoken": "^5.7.0",
-    "level": "^1.4.0",
+    "koa": "^2.0.0-alpha.3",
+    "koa-bodyparser": "^3.0.0",
+    "koa-router": "^7.0.1",
     "lodash": "^4.5.0",
+    "ms": "^0.7.1",
     "rc": "^1.1.6",
     "vantage": "^1.5.2"
   },

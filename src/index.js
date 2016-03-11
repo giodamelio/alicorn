@@ -1,60 +1,46 @@
-import Hapi from 'hapi';
-import Good from 'good';
-import GoodConsole from 'good-console';
-import JWTAuth from 'hapi-auth-jwt2';
+import Koa from 'koa';
+import Router from 'koa-router';
+import bodyParser from 'koa-bodyparser';
 
+import config from './config';
+import logger, { loggingMiddleware } from './logger';
 import auth from './auth';
 import userRoutes from './api/users';
 import vantageServer from './vantage';
 
-const server = new Hapi.Server();
+const app = new Koa();
+const router = new Router();
 
-// Setup our connections
-server.connection({
-  port: 3141,
-});
+// Log requests
+app.use(loggingMiddleware());
 
-server.register([
-  // Logging with Good
-  {
-    register: Good,
-    options: {
-      reporters: [
-        {
-          reporter: GoodConsole,
-          events: {
-            request: '*',
-            response: '*',
-            log: '*',
-          },
-        },
-      ],
-    },
-  },
-
-  // Authentication with JWT
-  {
-    register: JWTAuth,
-  },
-], (pluginError) => {
-  if (pluginError) {
-    throw pluginError;
-  }
-
-  // Setup the authentication
-  auth(server);
-
-  // Register the routes for the users api
-  userRoutes(server);
-
-  // Start the server
-  server.start((serverError) => {
-    if (serverError) {
-      throw serverError;
+// Handle errors
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (error) {
+    if (error.isBoom) {
+      ctx.status = error.output.statusCode;
+      ctx.body = error.output.payload;
+    } else {
+      ctx.logger.error(error);
     }
-    server.log('info', `Server running at: ${server.info.uri}`);
-
-    // Start the vantage server
-    vantageServer(server);
-  });
+  }
 });
+
+// Parse request bodies
+app.use(bodyParser());
+
+router.get('/auth', auth('user'), async ctx => {
+  ctx.body = ctx.request.body;
+});
+
+// Add our routes
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+logger.info(`Started server at http://localhost:${config.port}`);
+app.listen(config.port);
+
+// Start up vantage server for admin access
+vantageServer();
