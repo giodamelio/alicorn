@@ -1,7 +1,7 @@
 import JWT from 'jsonwebtoken';
 import Boom from 'boom';
 
-import config from './config';
+import config from '../config';
 
 export default function (permission) {
   return async (ctx, next) => {
