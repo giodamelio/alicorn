@@ -1,23 +1,24 @@
-import ms from 'ms';
+'use strict';
 
-import logger from '../logger';
+const winston = require('winston');
 
-// Simple logging middleware
-export default function () {
-  return async (ctx, next) => {
-    // Add logger to context so routes can use it
-    ctx.logger = logger;
+module.exports = function(app) {
+  // Add a logger to our app object for convenience
+  app.logger = winston;
 
-    // Log request
-    const start = Date.now();
-    await next();
-    const end = Date.now();
-    logger.info({
-      type: 'response',
-      method: ctx.request.method,
-      url: ctx.request.url,
-      status: ctx.response.status,
-      requestTime: ms(end - start),
-    });
+  return function(error, req, res, next) {
+    if (error) {
+      const message = `${error.code ? `(${error.code}) ` : '' }Route: ${req.url} - ${error.message}`;
+      
+      if (error.code === 404) {
+        winston.info(message);
+      }
+      else {
+        winston.error(message);
+        winston.info(error.stack);
+      }
+    }
+
+    next(error);
   };
-}
+};
