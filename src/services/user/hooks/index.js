@@ -1,47 +1,46 @@
 'use strict';
 
-const globalHooks = require('../../../hooks');
-const hooks = require('feathers-hooks');
-const auth = require('feathers-authentication').hooks;
+import hooks from 'feathers-hooks';
+import { hooks as auth } from 'feathers-authentication';
 
-exports.before = {
+export const before = {
   all: [],
   find: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.requireAuth()
+    auth.requireAuth(),
   ],
   get: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.requireAuth()
+    auth.requireAuth(),
   ],
   create: [
-    auth.hashPassword()
+    auth.hashPassword(),
   ],
   update: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.requireAuth()
+    auth.requireAuth(),
   ],
   patch: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.requireAuth()
+    auth.requireAuth(),
   ],
   remove: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.requireAuth()
-  ]
+    auth.requireAuth(),
+  ],
 };
 
-exports.after = {
+export const after = {
   all: [hooks.remove('password')],
   find: [],
   get: [],
   create: [],
   update: [],
   patch: [],
-  remove: []
+  remove: [],
 };

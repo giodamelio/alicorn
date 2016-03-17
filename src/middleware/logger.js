@@ -1,19 +1,22 @@
 'use strict';
 
-const winston = require('winston');
+import winston from 'winston';
 
-module.exports = function(app) {
+export default function (app) {
   // Add a logger to our app object for convenience
   app.logger = winston;
 
-  return function(error, req, res, next) {
+  // Log errors
+  return function (error, req, res, next) {
     if (error) {
-      const message = `${error.code ? `(${error.code}) ` : '' }Route: ${req.url} - ${error.message}`;
-      
+      let message = `Route: ${req.url} - ${error.message}`;
+      if (error.code) {
+        message = `(${error.code}) ${message}`;
+      }
+
       if (error.code === 404) {
         winston.info(message);
-      }
-      else {
+      } else {
         winston.error(message);
         winston.info(error.stack);
       }
@@ -21,4 +24,4 @@ module.exports = function(app) {
 
     next(error);
   };
-};
+}

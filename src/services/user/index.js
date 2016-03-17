@@ -1,24 +1,24 @@
 'use strict';
 
-const path = require('path');
-const NeDB = require('nedb');
-const service = require('feathers-nedb');
-const hooks = require('./hooks');
+import path from 'path';
+import NeDB from 'nedb';
+import service from 'feathers-nedb';
+import * as hooks from './hooks';
 
-module.exports = function(){
+export default function () {
   const app = this;
 
   const db = new NeDB({
     filename: path.join(app.get('nedb'), 'users.db'),
-    autoload: true
+    autoload: true,
   });
 
-  let options = {
+  const options = {
     Model: db,
     paginate: {
       default: 5,
-      max: 25
-    }
+      max: 25,
+    },
   };
 
   // Initialize our service with any options it requires
@@ -32,4 +32,4 @@ module.exports = function(){
 
   // Set up our after hooks
   userService.after(hooks.after);
-};
+}
