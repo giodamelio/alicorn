@@ -5,6 +5,7 @@ import JWT from 'jsonwebtoken';
 
 import config from './config';
 import logger from './logger';
+import User from './schemas/user';
 
 export default function () {
   const vantageServer = new Vantage();
@@ -28,6 +29,20 @@ export default function () {
       callback();
     });
 
+  // Create a new user
+  vantageServer
+    .command('user_new <username>')
+    .description('Creates a new user')
+    .action(function (args, callback) {
+      const user = new User({
+        username: args.username,
+      });
+
+      return user.save((err, newUser) => {
+        this.log(newUser);
+        callback();
+      });
+    });
 
   vantageServer
     .delimiter('$')

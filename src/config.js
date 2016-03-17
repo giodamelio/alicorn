@@ -12,6 +12,9 @@ const config = rc(name, {
 
   // Vantage port
   vantagePort: 31415,
+
+  // Mongo connection url
+  mongoUrl: `mongodb://localhost/${name}`,
 });
 
 if (!config.jwtSecret) {
