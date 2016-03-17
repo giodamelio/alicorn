@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node-dev -r babel-register src/",
-    "test": "mocha --recursive --compilers js:babel-register test/",
+    "test": "mocha --recursive --require should --compilers js:babel-register test/",
     "lint": "eslint src/ test/"
   },
   "keywords": [
@@ -50,6 +50,7 @@
     "eslint-config-airbnb": "^6.1.0",
     "mocha": "^2.4.5",
     "node-dev": "^3.1.0",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "should": "^8.2.2"
   }
 }

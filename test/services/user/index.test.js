@@ -1,10 +1,11 @@
 'use strict';
 
-import assert from 'assert';
+import should from 'should';
+
 import app from '../../../src/app';
 
 describe('user service', () => {
   it('registered the users service', () => {
-    assert.ok(app.service('users'));
+    should.exist(app.service('users'));
   });
 });

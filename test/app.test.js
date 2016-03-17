@@ -1,6 +1,5 @@
 'use strict';
 
-import assert from 'assert';
 import request from 'request';
 import app from '../src/app';
 
@@ -16,16 +15,16 @@ describe('Feathers application tests', function () {
 
   it('starts and shows the index page', function (done) {
     request('http://localhost:3141', function (err, res, body) {
-      assert.ok(body.indexOf('<html>') !== -1);
+      body.indexOf('<html>').should.not.equal(-1);
       done(err);
     });
   });
 
-  describe('404', () => {
+  describe('404', function () {
     it('shows a 404 HTML page', function (done) {
       request('http://localhost:3141/path/to/nowhere', function (err, res, body) {
-        assert.equal(res.statusCode, 404);
-        assert.ok(body.indexOf('<html>') !== -1);
+        res.statusCode.should.equal(404);
+        body.indexOf('<html>').should.not.equal(-1);
         done(err);
       });
     });
@@ -35,10 +34,10 @@ describe('Feathers application tests', function () {
         url: 'http://localhost:3141/path/to/nowhere',
         json: true,
       }, function (err, res, body) {
-        assert.equal(res.statusCode, 404);
-        assert.equal(body.code, 404);
-        assert.equal(body.message, 'Page not found');
-        assert.equal(body.name, 'NotFound');
+        res.statusCode.should.equal(404);
+        body.code.should.equal(404);
+        body.message.should.equal('Page not found');
+        body.name.should.equal('NotFound');
         done(err);
       });
     });
