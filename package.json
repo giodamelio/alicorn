@@ -4,8 +4,8 @@
   "description": "A simple game designed to be played by ai",
   "main": "src/index.js",
   "scripts": {
-    "start": "babel-node src/index.js",
-    "dev": "node-dev -r babel-register src/index.js | bunyan -o short",
+    "start": "babel-node gameserver/index.js",
+    "dev": "node-dev -r babel-register gameserver/index.js | bunyan -o short",
     "test": "mocha -R spec -r should --compilers js:babel-register test/* src/games/*/test/*.js",
     "lint": "eslint src/ test/"
   },
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/giodamelio/alicorn#readme",
   "dependencies": {
+    "bunyan": "^1.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
