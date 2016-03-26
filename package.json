@@ -4,9 +4,8 @@
   "description": "A simple game designed to be played by ai",
   "main": "src/index.js",
   "scripts": {
-    "start": "babel-node gameserver/index.js",
     "dev": "node-dev -r babel-register gameserver/src/index.js | bunyan -o short",
-    "test": "mocha -R spec -r should --compilers js:babel-register test/* src/games/*/test/*.js",
+    "test": "mocha -R spec -r should --compilers js:babel-register gameserver/test/",
     "lint": "eslint gameserver/"
   },
   "keywords": [
@@ -39,6 +38,6 @@
     "eslint-config-airbnb": "^6.0.1",
     "mocha": "^2.4.5",
     "node-dev": "^3.1.0",
-    "should": "^8.2.2"
+    "should": "^8.3.0"
   }
 }
