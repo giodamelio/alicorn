@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "node-dev -r babel-register gameserver/src/index.js | bunyan -o short",
-    "test": "mocha -R spec -r should --compilers js:babel-register gameserver/test/",
+    "test": "mocha --color -R spec -r should --compilers js:babel-register gameserver/test/ | bunyan -o short",
     "lint": "eslint gameserver/"
   },
   "keywords": [
