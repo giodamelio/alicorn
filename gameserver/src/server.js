@@ -8,22 +8,8 @@ export default (socket) => {
     .map((data) => data.toString('utf8'))
 
     // Split up stream by newline
-    .consume((err, data, push, next) => {
-      if (err) {
-        // Pass errors along the stream and consume next value
-        push(err);
-        next();
-      } else if (data === _.nil) {
-        // Pass nil (end event) along the stream
-        push(null, data);
-      } else {
-        // Split the data by newline and pass down the stream
-        for (const item of data.split('\n')) {
-          push(null, item);
-        }
-        next();
-      }
-    })
+    .split()
+    .filter((item) => item !== '')
 
     // Parse data to json ignoring any invalid lines
     .map((data) => {

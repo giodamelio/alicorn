@@ -11,10 +11,10 @@ export default function socketHelper(port, input, expectedOutput) {
     client.connect(port, () => {
       if (Array.isArray(input)) {
         for (const item of input) {
-          client.write(item);
+          client.write(`${item}\n`);
         }
       } else if (typeof input === 'string') {
-        client.write(input);
+        client.write(`${input}\n`);
       } else {
         reject('Input must be a string or an array of strings');
       }
@@ -24,8 +24,18 @@ export default function socketHelper(port, input, expectedOutput) {
 
     // Recieve the response
     _(client)
+      // Convert buffer to string
+      .map((data) => data.toString('utf8'))
+
+      // Split up by newline
+      .split()
+      .filter((item) => item !== '')
+
+      // Parse string to JSON
+      .map((item) => JSON.parse(item))
+
+      // Check that the output and expected output are the same
       .toArray((output) => {
-        // Check that the output and expected output are the same
         output.should.eql([].concat(expectedOutput));
 
         resolve();
