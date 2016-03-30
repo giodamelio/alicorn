@@ -1,6 +1,7 @@
 import _ from 'highland';
 
 import logger from './logger';
+import { error } from './util';
 
 export default (socket) => {
   _(socket)
@@ -17,9 +18,7 @@ export default (socket) => {
         return JSON.parse(data);
       } catch (err) {
         // Send an error if we can't parse the data
-        socket.write(JSON.stringify({
-          error: 'Non JSON data recieved',
-        }) + '\n');
+        socket.write(error('Non JSON data recieved'));
 
         return null;
       }
