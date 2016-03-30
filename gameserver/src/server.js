@@ -2,6 +2,7 @@ import _ from 'highland';
 
 import logger from './logger';
 import { error } from './util';
+import config from '../../config';
 
 export default (socket) => {
   _(socket)

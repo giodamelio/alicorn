@@ -24,7 +24,8 @@
   "homepage": "https://github.com/giodamelio/alicorn#readme",
   "dependencies": {
     "bunyan": "^1.8.0",
-    "highland": "^2.7.1"
+    "highland": "^2.7.1",
+    "rc": "^1.1.6"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
