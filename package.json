@@ -25,6 +25,7 @@
   "dependencies": {
     "bunyan": "^1.8.0",
     "highland": "^2.7.1",
+    "koa": "^2.0.0",
     "rc": "^1.1.6"
   },
   "devDependencies": {

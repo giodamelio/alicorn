@@ -1,10 +1,6 @@
-import net from 'net';
-
 import server from './server';
 import logger from './logger';
+import config from '../../config.js';
 
-const gameserver = net.createServer(server);
-
-const PORT = 3141;
-gameserver.listen(PORT);
-logger.info('Gameserver started at tcp://localhost:3141');
+server.listen(config.port);
+logger.info(`Gameserver started at http://localhost:${config.port}`);
