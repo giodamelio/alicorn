@@ -4,27 +4,33 @@ import KoaRouter from 'koa-router';
 import bodyparser from 'koa-bodyparser';
 import session from 'koa-session2';
 
-import RethinkdbStore from './rethinkdbStore';
+import databaseFactory from './database';
+import MongoStore from './mongoStore';
 
-const app = new Koa();
-const router = new KoaRouter();
+export default async function() {
+  // Connect to the database
+  const database = await databaseFactory();
 
-// Add keys for signed cookies
-app.keys = config.get('cookie_keys');
+  const app = new Koa();
+  const router = new KoaRouter();
 
-// Create our routes
-router.get('/', async (ctx) => {
-  ctx.body = ctx.request.body;
-});
+  // Add keys for signed cookies
+  app.keys = config.get('cookie_keys');
 
-// Setup our middleware
-app.use(bodyparser());
-app.use(session({
-  store: new RethinkdbStore(),
-}));
+  // Create our routes
+  router.get('/', async (ctx) => {
+    ctx.body = ctx.request.body;
+  });
 
-// Register routes
-app.use(router.routes());
-app.use(router.allowedMethods());
+  // Setup our middleware
+  app.use(bodyparser());
+  app.use(session({
+    store: new MongoStore(database),
+  }));
 
-export default app;
+  // Register routes
+  app.use(router.routes());
+  app.use(router.allowedMethods());
+
+  return app;
+}

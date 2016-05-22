@@ -1,34 +1,33 @@
 import { Store } from 'koa-session2';
-import rethinkdbdash from 'rethinkdbdash';
 
 import { createChildLogger } from './logger';
 
 const logger = createChildLogger('session_store');
 
 export default class RethinkdbStore extends Store {
-  constructor() {
+  constructor(database) {
     super();
-    this.r = rethinkdbdash({
-      db: 'alicorn',
-    });
+    this.database = database;
+    this.sessions = database.collection('sessions');
   }
 
   async get(sid) {
-    return await this.r.table('sessions').get(sid).run();
+    return await this.sessions.findOne({
+      _id: sid,
+    });
   }
 
   async set(data, opts) {
     if (!opts.sid) {
-      const session = await this.r.table('sessions').insert({
+      const session = await this.sessions.insertOne({
         data,
         createdAt: Date.now(),
-      }).run();
-      const sid = session.generated_keys[0];
-      logger.trace('Creating session', sid);
-      return sid;
+      });
+      logger.trace('Creating session', session.insertedId);
+      return session.insertedId;
     }
 
-    await this.r.table('sessions').get(opts.sid).update({
+    await this.sessions.findOneAndUpdate({ _id: opts.sid }, {
       data: data.data,
       usedAt: Date.now(),
     });
@@ -37,6 +36,6 @@ export default class RethinkdbStore extends Store {
   }
 
   async destory(sid) {
-    return await this.r.table('sessions').get(sid).delete().run();
+    return await this.sessions.findOneAndDelete({ _id: sid });
   }
 }
