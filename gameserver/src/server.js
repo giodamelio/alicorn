@@ -1,9 +1,8 @@
 import Koa from 'koa';
 import KoaRouter from 'koa-router';
-import KoaBodyparser from 'koa-bodyparser';
+import bodyparser from 'koa-bodyparser';
 import session from 'koa-session2';
 
-import logger from './logger';
 import RethinkdbStore from './rethinkdbStore';
 
 const app = new Koa();
@@ -15,7 +14,7 @@ router.get('/', async (ctx) => {
 });
 
 // Setup our middleware
-app.use(KoaBodyparser());
+app.use(bodyparser());
 app.keys = ['fix me'];
 app.use(session({
   store: new RethinkdbStore(),

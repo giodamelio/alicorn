@@ -1,7 +1,9 @@
 import { Store } from 'koa-session2';
 import rethinkdbdash from 'rethinkdbdash';
 
-import logger from './logger';
+import { createChildLogger } from './logger';
+
+const logger = createChildLogger('session_store');
 
 export default class RethinkdbStore extends Store {
   constructor() {
@@ -17,17 +19,18 @@ export default class RethinkdbStore extends Store {
 
   async set(data, opts) {
     if (!opts.sid) {
-      logger.info('Creating session');
       const session = await this.r.table('sessions').insert({
         data,
       }).run();
-      return session.generated_keys[0];
+      const sid = session.generated_keys[0];
+      logger.trace('Creating session', sid);
+      return sid;
     }
 
-    logger.info('Updating session');
     await this.r.table('sessions').get(opts.sid).update({
       data: data.data,
     });
+    logger.trace('Updating session', opts.sid);
     return opts.sid;
   }
 
