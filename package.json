@@ -4,7 +4,7 @@
   "description": "A simple game designed to be played by ai",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node-dev -r babel-register gameserver/src/index.js | bunyan -o short",
+    "dev": "node-dev -r babel-register -r babel-polyfill gameserver/src/index.js | bunyan -o short",
     "test": "mocha --color -R spec -r should --compilers js:babel-register gameserver/test/ | bunyan -o short",
     "lint": "eslint gameserver/"
   },
@@ -28,13 +28,16 @@
     "koa": "^2.0.0",
     "koa-bodyparser": "^3.1.0",
     "koa-router": "^7.0.1",
-    "rc": "^1.1.6"
+    "koa-session2": "^1.0.3",
+    "rc": "^1.1.6",
+    "rethinkdbdash": "^2.3.6"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-eslint": "^5.0.0",
     "babel-plugin-transform-class-properties": "^6.5.2",
     "babel-plugin-transform-object-rest-spread": "^6.5.0",
+    "babel-polyfill": "^6.9.0",
     "babel-preset-es2015-node": "^5.0.2",
     "babel-preset-stage-1": "^6.5.0",
     "babel-register": "^6.6.0",
