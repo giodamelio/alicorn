@@ -15,7 +15,6 @@ router.get('/', async (ctx) => {
 
 // Setup our middleware
 app.use(bodyparser());
-app.keys = ['fix me'];
 app.use(session({
   store: new RethinkdbStore(),
 }));
