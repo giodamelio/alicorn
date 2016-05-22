@@ -21,6 +21,7 @@ export default class RethinkdbStore extends Store {
     if (!opts.sid) {
       const session = await this.r.table('sessions').insert({
         data,
+        createdAt: Date.now(),
       }).run();
       const sid = session.generated_keys[0];
       logger.trace('Creating session', sid);
@@ -29,6 +30,7 @@ export default class RethinkdbStore extends Store {
 
     await this.r.table('sessions').get(opts.sid).update({
       data: data.data,
+      usedAt: Date.now(),
     });
     logger.trace('Updating session', opts.sid);
     return opts.sid;
