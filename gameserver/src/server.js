@@ -6,6 +6,10 @@ import session from 'koa-session2';
 
 import databaseFactory from './database';
 import MongoStore from './mongoStore';
+import auth from './auth';
+import { createChildLogger } from './logger';
+
+const logger = createChildLogger('main');
 
 export default async function() {
   // Connect to the database
@@ -19,7 +23,8 @@ export default async function() {
 
   // Create our routes
   router.get('/', async (ctx) => {
-    ctx.body = ctx.request.body;
+    ctx.body = ctx.isAuthenticated();
+    logger.info(ctx);
   });
 
   // Setup our middleware
@@ -27,6 +32,9 @@ export default async function() {
   app.use(session({
     store: new MongoStore(database),
   }));
+
+  // Setup auth
+  auth(app, router, database);
 
   // Register routes
   app.use(router.routes());

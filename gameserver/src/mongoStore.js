@@ -23,7 +23,7 @@ export default class RethinkdbStore extends Store {
         data,
         createdAt: Date.now(),
       });
-      logger.trace('Creating session', session.insertedId);
+      logger.trace({ id: session.insertedId }, 'Creating session');
       return session.insertedId;
     }
 
@@ -31,7 +31,7 @@ export default class RethinkdbStore extends Store {
       data: data.data,
       usedAt: Date.now(),
     });
-    logger.trace('Updating session', opts.sid);
+    logger.trace({ id: opts.sid }, 'Validating session');
     return opts.sid;
   }
 
