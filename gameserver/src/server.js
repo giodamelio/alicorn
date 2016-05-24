@@ -23,8 +23,7 @@ export default async function() {
 
   // Create our routes
   router.get('/', async (ctx) => {
-    ctx.body = ctx.isAuthenticated();
-    logger.info(ctx);
+    ctx.body = ctx.request.body;
   });
 
   // Setup our middleware
