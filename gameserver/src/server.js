@@ -29,7 +29,7 @@ app.use(session({
 }));
 
 // Setup auth
-auth(app, router, database);
+auth(router);
 
 // Register routes
 app.use(router.routes());
