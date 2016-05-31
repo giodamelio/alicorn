@@ -1,33 +1,29 @@
 import { Store } from 'koa-session2';
 
 import { createChildLogger } from './logger';
+import { Session } from './models';
 
 const logger = createChildLogger('session_store');
 
 export default class RethinkdbStore extends Store {
-  constructor(database) {
-    super();
-    this.database = database;
-    this.sessions = database.collection('sessions');
-  }
-
   async get(sid) {
-    return await this.sessions.findOne({
+    return await Session.findOne({
       _id: sid,
     });
   }
 
   async set(data, opts) {
     if (!opts.sid) {
-      const session = await this.sessions.insertOne({
+      const session = await new Session({
         data,
         createdAt: Date.now(),
-      });
-      logger.trace({ id: session.insertedId }, 'Creating session');
-      return session.insertedId;
+        usedAt: Date.now(),
+      }).save();
+      logger.trace({ id: session._id }, 'Creating session');
+      return session._id;
     }
 
-    await this.sessions.findOneAndUpdate({ _id: opts.sid }, {
+    await Session.findOneAndUpdate({ _id: opts.sid }, {
       data: data.data,
       usedAt: Date.now(),
     });
@@ -36,6 +32,6 @@ export default class RethinkdbStore extends Store {
   }
 
   async destory(sid) {
-    return await this.sessions.findOneAndDelete({ _id: sid });
+    return await Session.findOneAndRemove({ _id: sid });
   }
 }
