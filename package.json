@@ -4,7 +4,7 @@
   "description": "A simple game designed to be played by ai",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node-dev -r babel-register -r babel-polyfill gameserver/src/index.js | bunyan -o short -l trace",
+    "dev": "node-dev -r babel-register -r babel-polyfill --no-notify gameserver/src/index.js | bunyan -o short -l trace",
     "test": "mocha --color -R spec -r should --compilers js:babel-register gameserver/test/ | bunyan -o short",
     "lint": "eslint gameserver/"
   },
