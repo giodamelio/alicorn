@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export default mongoose.model('Session', {
-  data: Object,
+  user: Object,
   createdAt: {
     type: Date,
     required: true,

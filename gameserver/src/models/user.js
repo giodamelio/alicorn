@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
-const User = new mongoose.Schema({
+export const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
@@ -18,7 +18,7 @@ const User = new mongoose.Schema({
 });
 
 // Automaticly hash the password
-User.pre('save', function (next) {
+UserSchema.pre('save', function (next) {
   const user = this;
 
   // Only hash the password if it has been modified (or is new)
@@ -43,4 +43,29 @@ User.pre('save', function (next) {
   });
 });
 
-export default mongoose.model('User', User);
+// Check if a password if valid
+UserSchema.statics.checkPassword = function (username, password) {
+  return new Promise((resolve, reject) => {
+    // Find the user
+    this.findOne({ username }, (err, user) => {
+      if (err) {
+        reject(err);
+      } else {
+        // Compare the password
+        bcrypt.compare(password, user.password, (hashErr, isValid) => {
+          if (err) {
+            reject(err);
+          } else {
+            if (isValid) {
+              resolve(user._id);
+            } else {
+              resolve(false);
+            }
+          }
+        });
+      }
+    });
+  });
+};
+
+export default mongoose.model('User', UserSchema);

@@ -1,11 +1,11 @@
 import { createChildLogger } from './logger';
-import { User } from './models';
+import { User, Session } from './models';
 
 const logger = createChildLogger('auth');
 
 export default function (router) {
   // Create new users
-  router.post('/auth/local', async (ctx) => {
+  router.post('/auth/local/create', async (ctx) => {
     const body = ctx.request.body;
 
     logger.trace({ username: body.username }, 'Attempting to create user');
@@ -41,6 +41,42 @@ export default function (router) {
 
       logger.error(err);
       throw err;
+    }
+  });
+
+  // Login a user
+  router.post('/auth/local/login', async (ctx, next) => {
+    await next();
+    const body = ctx.request.body;
+
+    try {
+      const userId = await User.checkPassword(body.username, body.password);
+
+      if (userId) {
+        // Add user to session
+        const sessionId = ctx.cookies.get('koa:sess');
+        const tmp = await Session.findOneAndUpdate({ _id: sessionId }, {
+          user: {
+            _id: userId,
+            username: body.username,
+          },
+        }).exec();
+
+        console.log(ctx.sessionId);
+
+        ctx.status = 200;
+        ctx.body = {
+          message: 'Login successful',
+        };
+      } else {
+        ctx.status = 401;
+        ctx.body = {
+          error: 'Username or password is incorrect',
+        };
+      }
+    } catch (err) {
+      logger.error(err);
+      ctx.status = 500;
     }
   });
 }
