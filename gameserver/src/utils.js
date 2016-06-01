@@ -1,4 +1,8 @@
 export function parseAuthorizationHeader(header) {
+  if (!header) {
+    throw new Error('Invalid authorization header');
+  }
+
   const parts = header.split(' ');
 
   if (parts.length !== 2) {
