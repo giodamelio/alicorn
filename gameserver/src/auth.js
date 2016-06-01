@@ -58,8 +58,10 @@ router.post('/local/login', async (ctx) => {
 
     if (userId) {
       // Create token
-      const token = jwt.sign({ _id: userId, username: body.username },
-        config.get('auth.jwt_key'));
+      const token = jwt.sign({
+        _id: userId,
+        username: body.username,
+      }, config.get('auth.jwt_key'));
 
       // Add session to database
       await new Session({
