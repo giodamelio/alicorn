@@ -4,6 +4,7 @@ import config from 'config';
 
 import { createChildLogger } from './logger';
 import { User, Session } from './models';
+import * as utils from './utils';
 
 const logger = createChildLogger('auth');
 
@@ -86,3 +87,47 @@ router.post('/local/login', async (ctx) => {
 });
 
 export default router;
+
+// Authentication middleware
+export async function authenticate(ctx, next) {
+  try {
+    // Parse the token
+    const token = utils.parseAuthorizationHeader(ctx.headers.authorization);
+
+    // Check to see if the user has a session
+    const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
+    const hasSession = await Session.findOne({
+      user: tokenData._id,
+    }).populate('user').exec();
+
+    if (hasSession) {
+      // Add users session to the request context
+      ctx.session = tokenData;
+      await next();
+    } else {
+      // User has no session
+      ctx.status = 401;
+      ctx.body = {
+        message: 'Not authenticated',
+      };
+    }
+  } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
+      // Failed to decode the jwt token
+      ctx.status = 401;
+      ctx.body = {
+        error: 'Invalid token',
+      };
+    } else if (err.message === 'Invalid authorization header') {
+      // Failed to parse the authorization header
+      ctx.status = 401;
+      ctx.body = {
+        error: 'Invalid authentication header',
+      };
+    } else {
+      // Oops
+      logger.error(err);
+      ctx.status = 500;
+    }
+  }
+}
