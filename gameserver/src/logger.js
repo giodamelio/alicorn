@@ -2,10 +2,19 @@ import bunyan from 'bunyan';
 
 import { name } from '../../package.json';
 
-const logger = bunyan.createLogger({
-  name,
-  level: 'trace',
-});
+let logger;
+if (process.env.NODE_ENV === 'test') {
+  logger = bunyan.createLogger({
+    name,
+    level: 'trace',
+    streams: [],
+  });
+} else {
+  logger = bunyan.createLogger({
+    name,
+    level: 'trace',
+  });
+}
 
 export default logger;
 
