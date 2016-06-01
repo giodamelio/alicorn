@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+import config from 'config';
+
 import { createChildLogger } from './logger';
 import { User, Session } from './models';
 
@@ -45,28 +48,26 @@ export default function (router) {
   });
 
   // Login a user
-  router.post('/auth/local/login', async (ctx, next) => {
-    await next();
+  router.post('/auth/local/login', async (ctx) => {
     const body = ctx.request.body;
 
     try {
       const userId = await User.checkPassword(body.username, body.password);
 
       if (userId) {
-        // Add user to session
-        const sessionId = ctx.cookies.get('koa:sess');
-        const tmp = await Session.findOneAndUpdate({ _id: sessionId }, {
-          user: {
-            _id: userId,
-            username: body.username,
-          },
-        }).exec();
+        // Create token
+        const token = jwt.sign({ _id: userId, username: body.username },
+          config.get('auth.jwt_key'));
 
-        console.log(ctx.sessionId);
+        // Add session to database
+        await new Session({
+          user: userId,
+        }).save();
 
         ctx.status = 200;
         ctx.body = {
           message: 'Login successful',
+          token,
         };
       } else {
         ctx.status = 401;
