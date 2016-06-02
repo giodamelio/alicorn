@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "node-dev -r babel-register -r babel-polyfill --no-notify src/index.js | bunyan -o short -l trace",
-    "test": "NODE_ENV=test NODE_CONFIG_DIR=../../../config ava -s",
+    "test": "NODE_ENV=test NODE_CONFIG_DIR=../../../config ava -sv",
     "lint": "eslint src/ test/"
   },
   "keywords": [
