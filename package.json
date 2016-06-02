@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "node-dev -r babel-register -r babel-polyfill --no-notify gameserver/src/index.js | bunyan -o short -l trace",
-    "test": "mocha --color -R spec -r should --compilers js:babel-register gameserver/test/ | bunyan -o short",
+    "test": "NODE_ENV=test NODE_CONFIG_DIR=../../config ava",
     "lint": "eslint gameserver/"
   },
   "keywords": [
@@ -36,6 +36,7 @@
     "sqlite3": "^3.1.4"
   },
   "devDependencies": {
+    "ava": "^0.15.1",
     "babel-cli": "^6.5.1",
     "babel-eslint": "^5.0.0",
     "babel-plugin-transform-class-properties": "^6.5.2",
@@ -51,5 +52,14 @@
     "should": "^8.3.0",
     "supertest": "^1.2.0",
     "supertest-as-promised": "^3.1.0"
+  },
+  "ava": {
+    "files": [
+      "gameserver/test/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   }
 }

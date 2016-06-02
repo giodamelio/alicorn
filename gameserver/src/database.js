@@ -12,6 +12,12 @@ if (process.env.NODE_ENV === 'development') {
     ...config.get('database'),
   });
   database.sync();
+} else if (process.env.NODE_ENV === 'test') {
+  database = new Sequelize('alicorn', null, null, {
+    logging: false,
+    ...config.get('database'),
+  });
+  database.sync();
 }
 
 logger.info('Connected to database');
