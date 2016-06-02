@@ -57,16 +57,17 @@ router.post('/local/login', async (ctx) => {
     if (user) {
       const isValidPassword = await user.checkPassword(body.password);
       if (isValidPassword) {
+        // Create a new session
+        const session = await Session.create({
+          userId: user.id,
+        });
+
         // Create token
         const token = jwt.sign({
           id: user.id,
           username: user.username,
+          sessionId: session.id,
         }, config.get('auth.jwt_key'));
-
-        // Create a new session
-        await Session.create({
-          userId: user.id,
-        });
 
         ctx.status = 200;
         ctx.body = {
@@ -95,6 +96,39 @@ router.post('/local/login', async (ctx) => {
   }
 });
 
+router.post('/local/logout', async (ctx) => {
+  try {
+    // Parse the token
+    const token = utils.parseAuthorizationHeader(ctx.headers.authorization);
+
+    // Check to see if the user has a session
+    const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
+    const session = await Session.findOne({
+      where: {
+        userId: tokenData.id,
+      },
+    });
+
+    if (session) {
+      await session.destroy();
+
+      ctx.status = 200;
+      ctx.body = {
+        message: 'Logged out',
+      };
+
+      logger.trace({ id: tokenData.userId }, 'Logged out');
+    } else {
+      ctx.status = 401;
+      ctx.body = {
+        error: 'Not authenticated',
+      };
+    }
+  } catch (err) {
+    logger.error(err);
+  }
+});
+
 export default router;
 
 // Authentication middleware
@@ -107,7 +141,7 @@ export async function authenticate(ctx, next) {
     const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
     const hasSession = await Session.findOne({
       where: {
-        userId: tokenData.id,
+        id: tokenData.sessionId,
       },
     });
 
