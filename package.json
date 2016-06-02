@@ -4,9 +4,9 @@
   "description": "A simple game designed to be played by ai",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node-dev -r babel-register -r babel-polyfill --no-notify gameserver/src/index.js | bunyan -o short -l trace",
-    "test": "NODE_ENV=test NODE_CONFIG_DIR=../../../../config ava -s",
-    "lint": "eslint gameserver/"
+    "dev": "node-dev -r babel-register -r babel-polyfill --no-notify src/index.js | bunyan -o short -l trace",
+    "test": "NODE_ENV=test NODE_CONFIG_DIR=../../../config ava -s",
+    "lint": "eslint src/ test/"
   },
   "keywords": [
     "game",
@@ -55,7 +55,7 @@
   },
   "ava": {
     "files": [
-      "gameserver/test/**/*.js"
+      "test/**/*.js"
     ],
     "require": [
       "babel-register"

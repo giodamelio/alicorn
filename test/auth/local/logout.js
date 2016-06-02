@@ -3,7 +3,7 @@ import config from 'config';
 import supertest from 'supertest-as-promised';
 import jwt from 'jsonwebtoken';
 
-import gameserver from '../../../src/server';
+import server from '../../../src/server';
 import database from '../../../src/database';
 import { User } from '../../../src/models';
 
@@ -18,7 +18,7 @@ test.beforeEach(async () => {
 });
 
 test.skip('logout', (t) => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/login')
     .send({
       username: 'AzureDiamond',

@@ -3,7 +3,7 @@ import config from 'config';
 import supertest from 'supertest-as-promised';
 import jwt from 'jsonwebtoken';
 
-import gameserver from '../../../src/server';
+import server from '../../../src/server';
 import database from '../../../src/database';
 import { User } from '../../../src/models';
 
@@ -20,7 +20,7 @@ test.beforeEach(async () => {
 test('login', (t) => {
   t.plan(2);
 
-  return supertest(gameserver.listen())
+  return supertest(server.listen())
     .post('/auth/local/login')
     .send({
       username: 'AzureDiamond',
@@ -35,7 +35,7 @@ test('login', (t) => {
 });
 
 test('incorrrect password', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/login')
     .send({
       username: 'AzureDiamond',
@@ -48,7 +48,7 @@ test('incorrrect password', () => (
 ));
 
 test('incorrrect username', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/login')
     .send({
       username: 'haha_this_username_does_not_exist!',

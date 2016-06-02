@@ -1,6 +1,6 @@
 import bunyan from 'bunyan';
 
-import { name } from '../../package.json';
+import { name } from '../package.json';
 
 let logger;
 if (process.env.NODE_ENV === 'test') {

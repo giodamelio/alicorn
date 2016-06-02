@@ -2,7 +2,7 @@ import test from 'ava';
 import supertest from 'supertest-as-promised';
 import shortid from 'shortid';
 
-import gameserver from '../../../src/server';
+import server from '../../../src/server';
 import database from '../../../src/database';
 
 test.beforeEach(async () => {
@@ -14,7 +14,7 @@ test.beforeEach(async () => {
 test('create user', (t) => {
   t.plan(2);
 
-  return supertest(gameserver.listen())
+  return supertest(server.listen())
     .post('/auth/local/create')
     .send({
       username: 'AzureDiamond',
@@ -28,7 +28,7 @@ test('create user', (t) => {
 });
 
 test('username too short', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/create')
     .send({
       username: 'short',
@@ -44,7 +44,7 @@ test('username too short', () => (
 ));
 
 test('username too long', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/create')
     .send({
       username: 'fxfxfxfxfxfxfxfxfxfxfxfxfxfxfxfxf',
@@ -60,7 +60,7 @@ test('username too long', () => (
 ));
 
 test('password too short', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/create')
     .send({
       username: 'AzureDiamond',
@@ -76,7 +76,7 @@ test('password too short', () => (
 ));
 
 test('password too long', () => (
-  supertest(gameserver.listen())
+  supertest(server.listen())
     .post('/auth/local/create')
     .send({
       username: 'AzureDiamond',
