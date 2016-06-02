@@ -1,15 +1,17 @@
-import mongoose from 'mongoose';
+import Sequelize from 'sequelize';
+import shortid from 'shortid';
 
-import { UserSchema } from './user';
+import database from '../database';
 
-export default mongoose.model('Session', {
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now,
+const Session = database.define('session', {
+  id: {
+    type: Sequelize.STRING,
+    primaryKey: true,
+    unique: true,
+    defaultValue() {
+      return shortid.generate();
+    },
   },
 });
+
+export default Session;

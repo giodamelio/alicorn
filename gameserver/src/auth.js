@@ -17,36 +17,28 @@ router.post('/local/create', async (ctx) => {
   logger.trace({ username: body.username }, 'Attempting to create user');
 
   try {
-    const user = await new User(body).save();
-    logger.trace({ username: user.username, id: user._id }, 'Created user');
+    const user = await User.create({
+      username: body.username,
+      password: body.password,
+    });
+
     ctx.body = {
-      id: user._id,
+      id: user.id,
       username: user.username,
     };
+
+    logger.trace({ username: user.username, id: user.id }, 'Created user');
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      for (const error in err.errors) {
-        if (err.errors.hasOwnProperty(error)) {
-          ctx.status = 401;
-          ctx.body = {
-            error: err.errors[error].message,
-          };
-          break;
-        }
-      }
+    const error = err.errors[0];
+    ctx.status = 401;
+    ctx.body = {
+      error: error.message,
+      path: error.path,
+      type: error.type,
+      value: error.value,
+    };
 
-      return;
-    } else if (err.code === 11000) {
-      ctx.status = 401;
-      ctx.body = {
-        error: 'Username is already taken',
-      };
-
-      return;
-    }
-
-    logger.error(err);
-    throw err;
+    logger.trace({ username: body.username }, 'Failed to create user');
   }
 });
 
@@ -55,30 +47,47 @@ router.post('/local/login', async (ctx) => {
   const body = ctx.request.body;
 
   try {
-    const userId = await User.checkPassword(body.username, body.password);
-
-    if (userId) {
-      // Create token
-      const token = jwt.sign({
-        _id: userId,
+    // Find the user
+    const user = await User.findOne({
+      where: {
         username: body.username,
-      }, config.get('auth.jwt_key'));
+      },
+    });
 
-      // Add session to database
-      await new Session({
-        user: userId,
-      }).save();
+    if (user) {
+      const isValidPassword = await user.checkPassword(body.password);
+      if (isValidPassword) {
+        // Create token
+        const token = jwt.sign({
+          id: user.id,
+          username: user.username,
+        }, config.get('auth.jwt_key'));
 
-      ctx.status = 200;
-      ctx.body = {
-        message: 'Login successful',
-        token,
-      };
+        // Create a new session
+        await Session.create({
+          userId: user.id,
+        });
+
+        ctx.status = 200;
+        ctx.body = {
+          message: 'Login successful',
+          token,
+        };
+
+        logger.trace({ id: user.id }, 'User logged in');
+      } else {
+        ctx.status = 401;
+        ctx.body = {
+          error: 'Username or password is incorrect',
+        };
+        logger.trace({ id: user.id }, 'Incorrect password');
+      }
     } else {
       ctx.status = 401;
       ctx.body = {
         error: 'Username or password is incorrect',
       };
+      logger.trace({ username: body.username }, 'Incorrect username');
     }
   } catch (err) {
     logger.error(err);
@@ -97,8 +106,10 @@ export async function authenticate(ctx, next) {
     // Check to see if the user has a session
     const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
     const hasSession = await Session.findOne({
-      user: tokenData._id,
-    }).populate('user').exec();
+      where: {
+        userId: tokenData.id,
+      },
+    });
 
     if (hasSession) {
       // Add users session to the request context

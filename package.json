@@ -24,13 +24,16 @@
   "homepage": "https://github.com/giodamelio/alicorn#readme",
   "dependencies": {
     "bcrypt": "^0.8.6",
+    "bluebird": "^3.4.0",
     "bunyan": "^1.8.0",
     "config": "^1.20.3",
     "jsonwebtoken": "^7.0.0",
     "koa": "^2.0.0",
     "koa-bodyparser": "^3.1.0",
     "koa-router": "^7.0.1",
-    "mongoose": "^4.4.19"
+    "sequelize": "^3.23.3",
+    "shortid": "^2.2.6",
+    "sqlite3": "^3.1.4"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
