@@ -4,7 +4,6 @@ import config from 'config';
 
 import { createChildLogger } from './logger';
 import { User, Session } from './models';
-import * as utils from './utils';
 
 const logger = createChildLogger('auth');
 
@@ -99,7 +98,7 @@ router.post('/local/login', async (ctx) => {
 router.post('/local/logout', async (ctx) => {
   try {
     // Parse the token
-    const token = utils.parseAuthorizationHeader(ctx.headers.authorization);
+    const token = parseAuthorizationHeader(ctx.headers.authorization);
 
     // Check to see if the user has a session
     const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
@@ -135,7 +134,7 @@ export default router;
 export async function authenticate(ctx, next) {
   try {
     // Parse the token
-    const token = utils.parseAuthorizationHeader(ctx.headers.authorization);
+    const token = parseAuthorizationHeader(ctx.headers.authorization);
 
     // Check to see if the user has a session
     const tokenData = jwt.verify(token, config.get('auth.jwt_key'));
@@ -174,5 +173,21 @@ export async function authenticate(ctx, next) {
       logger.error(err);
       ctx.status = 500;
     }
+  }
+}
+
+export function parseAuthorizationHeader(header) {
+  if (!header) {
+    throw new Error('Invalid authorization header');
+  }
+
+  const parts = header.split(' ');
+
+  if (parts.length !== 2) {
+    throw new Error('Invalid authorization header');
+  } else if (parts[0] !== 'Bearer') {
+    throw new Error('Invalid authorization header');
+  } else {
+    return parts[1];
   }
 }
