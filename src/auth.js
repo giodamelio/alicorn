@@ -9,6 +9,23 @@ const logger = createChildLogger('auth');
 
 const router = new KoaRouter();
 
+// Parse the authorization header input format "Bearer <token>"
+export function parseAuthorizationHeader(header) {
+  if (!header) {
+    throw new Error('Invalid authorization header');
+  }
+
+  const parts = header.split(' ');
+
+  if (parts.length !== 2) {
+    throw new Error('Invalid authorization header');
+  } else if (parts[0] !== 'Bearer') {
+    throw new Error('Invalid authorization header');
+  } else {
+    return parts[1];
+  }
+}
+
 // Create new users
 router.post('/local/create', async (ctx) => {
   const body = ctx.request.body;
@@ -173,21 +190,5 @@ export async function authenticate(ctx, next) {
       logger.error(err);
       ctx.status = 500;
     }
-  }
-}
-
-export function parseAuthorizationHeader(header) {
-  if (!header) {
-    throw new Error('Invalid authorization header');
-  }
-
-  const parts = header.split(' ');
-
-  if (parts.length !== 2) {
-    throw new Error('Invalid authorization header');
-  } else if (parts[0] !== 'Bearer') {
-    throw new Error('Invalid authorization header');
-  } else {
-    return parts[1];
   }
 }
